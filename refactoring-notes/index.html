@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refactoring Lab - Mastery Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent),
+                              radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.1), transparent);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #818cf8, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 1.5rem;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 850px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .code-block {
+            position: relative;
+        }
+
+        .code-label {
+            position: absolute;
+            top: -0.75rem;
+            left: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .code-label.after {
+            background: var(--accent);
+        }
+
+        pre {
+            border-radius: 0.75rem !important;
+            margin: 0 !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            font-size: 0.9rem !important;
+        }
+
+        .benefits {
+            margin-top: 1.5rem;
+            list-style: none;
+        }
+
+        .benefits li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .benefits li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="tag">Refactoring Lab 03</div>
+            <h1>Refactoring in Software Development</h1>
+            <p class="subtitle">Improving internal structure without changing external behavior.</p>
+        </header>
+
+        <div class="card">
+            <h2>1. Rename Variables/Methods</h2>
+            <p>Meaningful names improve readability and maintainability. Cryptic names like <code>a</code>, <code>b</code>, <code>x</code> are replaced with descriptive ones.</p>
+            <div class="grid">
+                <div class="code-block">
+                    <span class="code-label">Before</span>
+                    <pre><code class="language-java">public class Calculator {
+    public double calc(double a, double b) {
+        double x = a + b;
+        double y = a * b;
+        return x / y;
+    }
+}</code></pre>
+                </div>
+                <div class="code-block">
+                    <span class="code-label after">After</span>
+                    <pre><code class="language-java">public class Calculator {
+    public double calculateSumProductRatio(double num1, double num2) {
+        double sum = num1 + num2;
+        double product = num1 * num2;
+        return sum / product;
+    }
+}</code></pre>
+                </div>
+            </div>
+            <ul class="benefits">
+                <li>Enhanced readability for future developers.</li>
+                <li>Self-documenting code.</li>
+                <li>Reduces cognitive load when reading logic.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>2. Extract Method</h2>
+            <p>Break down long methods into smaller, reusable ones. Each method should do only one thing (Single Responsibility Principle).</p>
+            <div class="grid">
+                <div class="code-block">
+                    <span class="code-label">Before</span>
+                    <pre><code class="language-java">public void printOrderSummary(Order order) {
+    double totalPrice = 0;
+    for (Item item : order.getItems()) {
+        totalPrice += item.getPrice() * item.getQuantity();
+    }
+    if (order.getCustomer().isMember()) {
+        totalPrice *= 0.9;
+    }
+    // ... printing logic ...
+}</code></pre>
+                </div>
+                <div class="code-block">
+                    <span class="code-label after">After</span>
+                    <pre><code class="language-java">public void printOrderSummary(Order order) {
+    double totalPrice = calculateTotalPrice(order.getItems());
+    totalPrice = applyDiscount(totalPrice, order.getCustomer().isMember());
+    printSummary(order, totalPrice);
+}
+
+private double calculateTotalPrice(List&lt;Item&gt; items) { ... }
+private double applyDiscount(double price, boolean isMember) { ... }</code></pre>
+                </div>
+            </div>
+            <ul class="benefits">
+                <li>Improved modularity and reusability.</li>
+                <li>Easier to unit test individual pieces of logic.</li>
+                <li>Main method acts as a high-level orchestration layer.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>3. Guard Clauses</h2>
+            <p>Handle exceptional cases early to reduce nested <code>if</code> statements and "Arrow Code".</p>
+            <div class="grid">
+                <div class="code-block">
+                    <span class="code-label">Before</span>
+                    <pre><code class="language-java">public double calculateDiscount(Order order) {
+    double discount = 0.0;
+    if (order.getTotalAmount() > 100) {
+        if (order.getCustomer().isPremium()) {
+            discount = 0.2;
+        } else {
+            discount = 0.1;
+        }
+    }
+    return discount;
+}</code></pre>
+                </div>
+                <div class="code-block">
+                    <span class="code-label after">After</span>
+                    <pre><code class="language-java">public double calculateDiscount(Order order) {
+    if (order.getTotalAmount() <= 100) {
+        return 0.0;
+    }
+
+    if (order.getCustomer().isPremium()) {
+        return 0.2;
+    }
+
+    return 0.1;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p style="text-align: center; color: var(--text-muted); margin-top: 4rem;">&copy; 2026 Refactoring Mastery Lab. Built with &hearts; for clean code.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+</body>
+</html>
